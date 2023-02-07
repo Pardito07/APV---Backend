@@ -1,52 +1,73 @@
 import nodemailer from 'nodemailer';
+import Sib from 'sib-api-v3-sdk'
 
 const emailRegistro = async datos => {
-    const { email, nombre, token } = datos;
+    const { nombre, email, token } = datos;
 
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    const client = Sib.ApiClient.instance
+    const apiKey = client.authentications['api-key']
+    apiKey.apiKey = process.env.API_KEY
 
-    const info = await transporter.sendMail({
-        from: 'APV - Administrador de Pacientes de Veterinaria <cuentas@apv.com>',
-        to: email,
-        subject: 'APV - Confirma tu Cuenta',
-        text: 'Confirma tu cuenta en APV',
-        html: `
-        <p>Hola: ${nombre}, confirma tu cuenta en APV</p>
-        <p>Tu cuenta esta casi lista, solo debes comprobarla en el siguiente enlace:</p>
-        <a href='http://127.0.0.1:5173/confirmar/${token}'>Confirmar Cuenta</a>
-        <p>Si tu no creaste esta cuenta, puedes ignorar este mensaje.</p>`
-    });
+    const tranEmailApi = new Sib.TransactionalEmailsApi()
+    const sender = {
+        email: 'diegopar03@gmail.com',
+        name: 'Diego Pardo',
+    }
+    const receivers = [
+        {
+            email,
+        },
+    ]
+
+    tranEmailApi
+    .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: 'APV - Confirma tu cuenta',
+        htmlContent: `
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Hola: ${nombre}, confirma tu cuenta en APV</p>
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Tu cuenta esta casi lista, solo debes comprobarla en el siguiente enlace:</p>
+            <a style="background-color:#4f46e5; font-weight:bold; color:white; padding:10px; border-radius:5px; text-decoration:none; text-transform:uppercase; margin-top:20px; margin-bottom:20px;" href="http://127.0.0.1:5173/confirmar/${token}">Confirmar Cuenta</a>
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Si tu no creaste esta cuenta, puedes ignorar este mensaje<p>
+        `
+    })
+    .then(console.log)
+    .catch(console.log)
 }
 
 const emailRecuperarPassword = async datos => {
-    const { email, nombre, token } = datos;
 
-    const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    const { nombre, email, token } = datos;
 
-    const info = await transporter.sendMail({
-        from: 'APV - Administrador de Proyectos <cuentas@apv.com>',
-        to: email,
-        subject: 'APV - Reestablece tu Password',
-        text: 'Reestablece tu password en APV',
-        html: `<p>Hola: ${nombre}, has solicitado reestablecer tu password</p>
-               <p>Sigue el siguiente enlace para generar un nuevo password:</p>
-               <a href='http://127.0.0.1:5173/olvide-password/${token}'>Reestablecer Password</a>
-               <p>Si tu no solicitaste este email, puedes ignorar este mensaje.</p>`
-    });
+    const client = Sib.ApiClient.instance
+    const apiKey = client.authentications['api-key']
+    apiKey.apiKey = process.env.API_KEY
+
+    const tranEmailApi = new Sib.TransactionalEmailsApi()
+    const sender = {
+        email: 'diegopar03@gmail.com',
+        name: 'Diego Pardo',
+    }
+    const receivers = [
+        {
+            email,
+        },
+    ]
+
+    tranEmailApi
+    .sendTransacEmail({
+        sender,
+        to: receivers,
+        subject: 'APV - Reestablece tu contraseña',
+        htmlContent: `
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Hola: ${nombre}, has solicitado reestablecer tu contraseña</p>
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">sigue el siguiente enlace para generar una nueva:</p>
+            <a style="background-color:#4f46e5; font-weight:bold; color:white; padding:10px; border-radius:5px; text-decoration:none; text-transform:uppercase; margin-top:20px; margin-bottom:20px;" href="http://127.0.0.1:5173/olvide-password/${token}">Reestablecer Contraseña</a>
+            <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Si tu no solicitaste este email, puedes ignorar este mensaje<p>
+        `
+    })
+    .then(console.log)
+    .catch(console.log)
 }
 
 export {
