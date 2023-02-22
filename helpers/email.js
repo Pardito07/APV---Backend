@@ -27,7 +27,7 @@ const emailRegistro = async datos => {
         htmlContent: `
             <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Hola: ${nombre}, confirma tu cuenta en APV</p>
             <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Tu cuenta esta casi lista, solo debes comprobarla en el siguiente enlace:</p>
-            <a style="background-color:#4f46e5; font-weight:bold; color:white; padding:10px; border-radius:5px; text-decoration:none; text-transform:uppercase; margin-top:20px; margin-bottom:20px;" href="http://${process.env.FRONTEND_URL}/${token}">Confirmar Cuenta</a>
+            <a style="background-color:#4f46e5; font-weight:bold; color:white; padding:10px; border-radius:5px; text-decoration:none; text-transform:uppercase; margin-top:20px; margin-bottom:20px;" href="http://${process.env.FRONTEND_URL}/confirmar/${token}">Confirmar Cuenta</a>
             <p style="display:block; color:#374151; font-weight:bold; text-transform:uppercase;">Si tu no creaste esta cuenta, puedes ignorar este mensaje<p>
         `
     })
